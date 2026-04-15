@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/detail_profile.dart';
+import 'package:flutter_application_1/screens/detail_profile.dart';
+import 'package:flutter_application_1/screens/list_profile.dart';
+import 'package:flutter_application_1/models/profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: ListProfile(),
     );
   }
 }
@@ -115,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // children horizontally, and tries to be as tall as its parent.
           //
           // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment toz
+          // how it positions its children. Here we use mainAxisAlignment to
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
@@ -123,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text('Tude Ryan Wijaya Kusuma - 2415354020'),
             const Text('Step: 20'),
@@ -161,12 +163,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: () {
                 String nama = namaController.text;
-                int angka = _counter;
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        DetailProfile(nama: nama, angka: angka),
+                        DetailProfile(profile: Profile(id: 0, name: nama, bio: "Developer", phone: "081212999803")),
                   ),
                 );
               },

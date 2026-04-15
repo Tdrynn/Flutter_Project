@@ -1,25 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_application_1/models/profile.dart';
 
-class DetailProfile extends StatefulWidget {
-  final String nama;
-  final int angka;
+class DetailProfile extends StatelessWidget {
+  const DetailProfile({super.key, required this.profile});
 
-  const DetailProfile({super.key, required this.nama, required this.angka});
-
-  @override
-  State<DetailProfile> createState() => _DetailProfileState();
-}
-
-class _DetailProfileState extends State<DetailProfile> {
-  late String nama;
-  bool isChanged = false;
-  String teks = "Tude Ryan Wijaya Kusuma";
-
-  @override
-  void initState() {
-    super.initState();
-    nama = widget.nama;
-  }
+  final Profile profile;
 
   @override
   Widget build(BuildContext context) {
@@ -58,39 +44,35 @@ class _DetailProfileState extends State<DetailProfile> {
               ),
             ),
             Text(
-              nama,
+              profile.name,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
-            const Text(
-              '2415354020',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w100),
-            ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
-              'Counter saat ini: ${widget.angka}',
-              style: const TextStyle(fontSize: 16),
+              profile.bio,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16),
-            const Padding(
+            SizedBox(height: 8),
+            Text(
+              "Phone Number : ${profile.phone}",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+
+            SizedBox(height: 8),
+
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
                 textAlign: TextAlign.justify,
               ),
             ),
-            const SizedBox(height: 32),
 
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  isChanged = !isChanged;
-                  teks = isChanged
-                      ? "Tude Ryan"
-                      : "Tude Ryan Wijaya Kusuma";
-                });
+                Fluttertoast.showToast(msg: "Button ini belum memiliki fungsi");
               },
-              child: Text(teks),
+              child: Text("Klik Saya"),
             ),
 
             const SizedBox(height: 20),
@@ -103,6 +85,7 @@ class _DetailProfileState extends State<DetailProfile> {
             ),
 
             const SizedBox(height: 50),
+
           ],
         ),
       ),
