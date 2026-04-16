@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/detail_profile.dart';
 import 'package:flutter_application_1/screens/list_profile.dart';
 import 'package:flutter_application_1/models/profile.dart';
+import 'package:flutter_application_1/screens/edit_profile.dart';
 
 void main() {
   runApp(const MyApp());

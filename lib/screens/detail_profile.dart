@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_application_1/models/profile.dart';
+import 'package:flutter_application_1/screens/edit_profile.dart';
 
-class DetailProfile extends StatelessWidget {
+class DetailProfile extends StatefulWidget {
   const DetailProfile({super.key, required this.profile});
 
   final Profile profile;
 
+  @override
+  State<DetailProfile> createState() => _DetailProfileState();
+}
+
+class _DetailProfileState extends State<DetailProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,17 +50,17 @@ class DetailProfile extends StatelessWidget {
               ),
             ),
             Text(
-              profile.name,
+              widget.profile.name,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
             Text(
-              profile.bio,
+              widget.profile.bio,
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
             Text(
-              "Phone Number : ${profile.phone}",
+              "Phone Number : ${widget.profile.phone}",
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
 
@@ -67,25 +73,40 @@ class DetailProfile extends StatelessWidget {
                 textAlign: TextAlign.justify,
               ),
             ),
-
             ElevatedButton(
               onPressed: () {
                 Fluttertoast.showToast(msg: "Button ini belum memiliki fungsi");
               },
               child: Text("Klik Saya"),
             ),
-
             const SizedBox(height: 20),
-
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
               },
               child: const Text("Go Back"),
             ),
+            ElevatedButton(
+              onPressed: () async {
+                final Profile? updatedProfile = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditProfile(profile: widget.profile),
+                  ),
+                );
 
+                if (updatedProfile != null) {
+                  setState(() {
+                    widget.profile.name = updatedProfile.name;
+                    widget.profile.bio = updatedProfile.bio;
+                    widget.profile.phone = updatedProfile.phone;
+                  });
+                  Fluttertoast.showToast(msg: "Profile berhasil diperbarui");
+                }
+              },
+              child: const Text("Edit Profile"),
+            ),
             const SizedBox(height: 50),
-
           ],
         ),
       ),
