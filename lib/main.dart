@@ -168,7 +168,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        DetailProfile(profile: Profile(id: 0, name: nama, bio: "Developer", phone: "081212999803")),
+                        DetailProfile(
+                          profile: Profile(
+                            id: 0,
+                            step: 20,
+                            name: nama,
+                            bio: "Developer",
+                            phone: "081212999803"
+                            )
+                        ),
                   ),
                 );
               },

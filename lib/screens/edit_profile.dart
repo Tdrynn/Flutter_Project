@@ -15,6 +15,7 @@ class _EditProfileState extends State<EditProfile> {
   late TextEditingController _nameController;
   late TextEditingController _bioController;
   late TextEditingController _phoneController;
+  late TextEditingController _stepController;
 
   @override
   void initState() {
@@ -22,6 +23,7 @@ class _EditProfileState extends State<EditProfile> {
     _nameController = TextEditingController(text: widget.profile.name);
     _bioController = TextEditingController(text: widget.profile.bio);
     _phoneController = TextEditingController(text: widget.profile.phone);
+    _stepController = TextEditingController(text: widget.profile.step.toString());
   }
 
   @override
@@ -29,6 +31,7 @@ class _EditProfileState extends State<EditProfile> {
     _nameController.dispose();
     _bioController.dispose();
     _phoneController.dispose();
+    _stepController.dispose();
     super.dispose();
   }
 
@@ -54,6 +57,11 @@ class _EditProfileState extends State<EditProfile> {
                 controller: _phoneController,
                 decoration: InputDecoration(labelText: 'Phone'),
               ),
+              TextFormField(
+                controller: _stepController,
+                decoration: InputDecoration(labelText: 'Step'),
+                keyboardType: TextInputType.number,
+              ),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -62,6 +70,7 @@ class _EditProfileState extends State<EditProfile> {
                       bio: _bioController.text,
                       phone: _phoneController.text,
                       id: widget.profile.id,
+                      step: int.parse(_stepController.text),
                     );
                     Navigator.pop(context, updatedProfile);
                   }

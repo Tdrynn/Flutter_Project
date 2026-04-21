@@ -16,12 +16,14 @@ class _ListProfileState extends State<ListProfile> {
   void addItem() {
     setState(() {
       int lastIndex = profiles.length;
+      int step = 20;
       profiles.add(
         Profile(
           id: lastIndex + 1,
-          name: "Tude ${lastIndex + 1}",
+          step: step,
+          name: "Tude",
           bio: "Flutter Developer",
-          phone: "081212999803",
+          phone: "0812129998",
         ),
       );
     });
@@ -54,24 +56,34 @@ class _ListProfileState extends State<ListProfile> {
                   'https://i.pravatar.cc/150?img=10',
                 ),
               ),
-              title: Text(profile.name),
+              title: Text(profile.displayName(index)),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(profile.bio),
                   SizedBox(height: 4),
                   Text(
-                    "Phone: ${profile.phone}",
+                    profile.displayPhone(index),
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailProfile(profile: profile),
-                ),
-              ),
+              onTap: () async{
+                final updatedProfile = await Navigator.push (
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailProfile(profile: profile),
+                  ),
+                );
+
+                if (updatedProfile != null) {
+                  setState(() {
+                    for (var p in profiles) {
+                      p.step = updatedProfile.step;
+                    }
+                  });
+                }
+              },
             ),
           );
         },
