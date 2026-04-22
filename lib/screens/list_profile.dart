@@ -29,9 +29,9 @@ class _ListProfileState extends State<ListProfile> {
     });
   }
 
-  void deleteitem(int index) {
+  void deleteitem(int id) {
     setState(() {
-      profiles.removeAt(index);
+      profiles.removeWhere((profile) => profile.id == id);
     });
   }
 
@@ -46,8 +46,8 @@ class _ListProfileState extends State<ListProfile> {
           return Dismissible(
             key: Key(profile.name),
             onDismissed: (direction) {
-              final deletedItem = profiles[index];
-              deleteitem(index);
+              final deletedItem = profile;
+              deleteitem(deletedItem.id);
               Fluttertoast.showToast(msg: "${deletedItem.name} dihapus");
             },
             child: ListTile(
@@ -101,7 +101,7 @@ class _ListProfileState extends State<ListProfile> {
           FloatingActionButton(
             onPressed: () {
               if (profiles.isNotEmpty) {
-                deleteitem(profiles.length - 1);
+                deleteitem(profiles[profiles.length - 1].id);
               }
             },
             child: Icon(Icons.remove),
