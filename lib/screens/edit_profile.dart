@@ -15,7 +15,7 @@ class _EditProfileState extends State<EditProfile> {
   late TextEditingController _nameController;
   late TextEditingController _bioController;
   late TextEditingController _phoneController;
-  late TextEditingController _stepController;
+  late TextEditingController _nimController;
 
   @override
   void initState() {
@@ -23,7 +23,7 @@ class _EditProfileState extends State<EditProfile> {
     _nameController = TextEditingController(text: widget.profile.name);
     _bioController = TextEditingController(text: widget.profile.bio);
     _phoneController = TextEditingController(text: widget.profile.phone);
-    _stepController = TextEditingController(text: widget.profile.step.toString());
+    _nimController = TextEditingController(text: widget.profile.nim);
   }
 
   @override
@@ -31,7 +31,7 @@ class _EditProfileState extends State<EditProfile> {
     _nameController.dispose();
     _bioController.dispose();
     _phoneController.dispose();
-    _stepController.dispose();
+    _nimController.dispose();
     super.dispose();
   }
 
@@ -50,17 +50,16 @@ class _EditProfileState extends State<EditProfile> {
                 decoration: InputDecoration(labelText: 'Nama'),
               ),
               TextFormField(
+                controller: _nimController,
+                decoration: InputDecoration(labelText: 'NIM'),
+              ),
+              TextFormField(
                 controller: _bioController,
                 decoration: InputDecoration(labelText: 'Bio'),
               ),
               TextFormField(
                 controller: _phoneController,
                 decoration: InputDecoration(labelText: 'Phone'),
-              ),
-              TextFormField(
-                controller: _stepController,
-                decoration: InputDecoration(labelText: 'Step'),
-                keyboardType: TextInputType.number,
               ),
               ElevatedButton(
                 onPressed: () {
@@ -70,7 +69,7 @@ class _EditProfileState extends State<EditProfile> {
                       bio: _bioController.text,
                       phone: _phoneController.text,
                       id: widget.profile.id,
-                      step: int.parse(_stepController.text),
+                      nim: _nimController.text,
                     );
                     Navigator.pop(context, updatedProfile);
                   }

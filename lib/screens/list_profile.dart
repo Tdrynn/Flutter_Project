@@ -16,14 +16,13 @@ class _ListProfileState extends State<ListProfile> {
   void addItem() {
     setState(() {
       int lastIndex = profiles.length;
-      int step = 20;
       profiles.add(
         Profile(
           id: lastIndex + 1,
-          step: step,
+          nim: "20",
           name: "Tude",
           bio: "Flutter Developer",
-          phone: "0812129998",
+          phone: "081212999803",
         ),
       );
     });
@@ -43,12 +42,12 @@ class _ListProfileState extends State<ListProfile> {
         itemCount: profiles.length,
         itemBuilder: (context, index) {
           final profile = profiles[index];
+
           return Dismissible(
-            key: Key(profile.name),
+            key: Key(profile.id.toString()), // ✅ lebih aman dari name
             onDismissed: (direction) {
-              final deletedItem = profile;
-              deleteitem(deletedItem.id);
-              Fluttertoast.showToast(msg: "${deletedItem.name} dihapus");
+              deleteitem(profile.id);
+              Fluttertoast.showToast(msg: "${profile.name} dihapus");
             },
             child: ListTile(
               leading: CircleAvatar(
@@ -56,52 +55,40 @@ class _ListProfileState extends State<ListProfile> {
                   'https://i.pravatar.cc/150?img=10',
                 ),
               ),
-              title: Text(profile.displayName(index)),
+              title: Text(profile.name),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(profile.bio),
                   SizedBox(height: 4),
+                  Text(profile.phone, style: TextStyle(color: Colors.grey)),
                   Text(
-                    profile.displayPhone(index),
+                    "NIM: ${profile.nim}",
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
-              onTap: () async{
-                final updatedProfile = await Navigator.push (
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DetailProfile(profile: profile),
-                  ),
-                );
 
-                if (updatedProfile != null) {
-                  setState(() {
-                    for (var p in profiles) {
-                      p.step = updatedProfile.step;
-                    }
-                  });
-                }
-              },
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailProfile(profile: profile),
+                ),
+              ),
             ),
           );
         },
       ),
+
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          FloatingActionButton(
-            onPressed: () {
-              addItem();
-            },
-            child: Icon(Icons.add),
-          ),
+          FloatingActionButton(onPressed: addItem, child: Icon(Icons.add)),
           SizedBox(height: 10),
           FloatingActionButton(
             onPressed: () {
               if (profiles.isNotEmpty) {
-                deleteitem(profiles[profiles.length - 1].id);
+                deleteitem(profiles.last.id);
               }
             },
             child: Icon(Icons.remove),
