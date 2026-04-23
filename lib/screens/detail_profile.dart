@@ -60,7 +60,7 @@ class _DetailProfileState extends State<DetailProfile> {
             ),
             SizedBox(height: 8),
             Text(
-              widget.profile.phone,
+              widget.profile.phone20,
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
 
@@ -99,7 +99,8 @@ class _DetailProfileState extends State<DetailProfile> {
                   setState(() {
                     widget.profile.name = updatedProfile.name;
                     widget.profile.bio = updatedProfile.bio;
-                    widget.profile.phone = updatedProfile.phone;
+                    widget.profile.phone20 = updatedProfile.phone20;
+                    widget.profile.nim = updatedProfile.nim;
                   });
                   Fluttertoast.showToast(msg: "Profile berhasil diperbarui");
                   Navigator.pop(context, widget.profile); //

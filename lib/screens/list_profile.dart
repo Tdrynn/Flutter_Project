@@ -22,7 +22,7 @@ class _ListProfileState extends State<ListProfile> {
           nim: "20",
           name: "Tude",
           bio: "Flutter Developer",
-          phone: "081212999803",
+          phone20: "081212999803",
         ),
       );
     });
@@ -44,7 +44,7 @@ class _ListProfileState extends State<ListProfile> {
           final profile = profiles[index];
 
           return Dismissible(
-            key: Key(profile.id.toString()), // ✅ lebih aman dari name
+            key: Key(profile.id.toString()),
             onDismissed: (direction) {
               deleteitem(profile.id);
               Fluttertoast.showToast(msg: "${profile.name} dihapus");
@@ -61,7 +61,7 @@ class _ListProfileState extends State<ListProfile> {
                 children: [
                   Text(profile.bio),
                   SizedBox(height: 4),
-                  Text(profile.phone, style: TextStyle(color: Colors.grey)),
+                  Text(profile.phone20, style: TextStyle(color: Colors.grey)),
                   Text(
                     "NIM: ${profile.nim}",
                     style: TextStyle(color: Colors.grey),
@@ -69,12 +69,20 @@ class _ListProfileState extends State<ListProfile> {
                 ],
               ),
 
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailProfile(profile: profile),
-                ),
-              ),
+              onTap: () async {
+                final updatedProfile = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:(context) => DetailProfile(profile: profile),
+                  ),
+                );
+
+                if (updatedProfile != null) {
+                  setState(() {
+                    profiles[index] = updatedProfile;
+                  });
+                }
+              },
             ),
           );
         },

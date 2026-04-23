@@ -174,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             nim: "20",
                             name: nama,
                             bio: "Developer",
-                            phone: "081212999803"
+                            phone20: "081212999803"
                             )
                         ),
                   ),

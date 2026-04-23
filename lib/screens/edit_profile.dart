@@ -22,7 +22,7 @@ class _EditProfileState extends State<EditProfile> {
     super.initState();
     _nameController = TextEditingController(text: widget.profile.name);
     _bioController = TextEditingController(text: widget.profile.bio);
-    _phoneController = TextEditingController(text: widget.profile.phone);
+    _phoneController = TextEditingController(text: widget.profile.phone20);
     _nimController = TextEditingController(text: widget.profile.nim);
   }
 
@@ -67,7 +67,7 @@ class _EditProfileState extends State<EditProfile> {
                     final updatedProfile = Profile(
                       name: _nameController.text,
                       bio: _bioController.text,
-                      phone: _phoneController.text,
+                      phone20: _phoneController.text,
                       id: widget.profile.id,
                       nim: _nimController.text,
                     );

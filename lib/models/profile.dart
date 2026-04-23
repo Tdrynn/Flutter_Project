@@ -1,9 +1,9 @@
 class Profile {
   int id;
-  String phone;
+  String phone20;
   String name;
   String bio;
   String nim;
 
-  Profile({required this.id, required this.nim, required this.name, required this.bio, required this.phone});
+  Profile({required this.id, required this.nim, required this.name, required this.bio, required this.phone20});
 }
