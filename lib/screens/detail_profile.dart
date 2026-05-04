@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/provider/profile_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_application_1/models/profile.dart';
 import 'package:flutter_application_1/screens/edit_profile.dart';
+import 'package:provider/provider.dart';
 
-class DetailProfile extends StatefulWidget {
-  const DetailProfile({super.key, required this.profile});
+class DetailProfile extends StatelessWidget {
+  final int profileId;
 
-  final Profile profile;
+  const DetailProfile({super.key, required this.profileId});
 
-  @override
-  State<DetailProfile> createState() => _DetailProfileState();
-}
-
-class _DetailProfileState extends State<DetailProfile> {
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<ProfileProvider>();
+
+    final profile = provider.profiles.firstWhere((p) => p.id == profileId);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Profile'),
@@ -49,22 +50,42 @@ class _DetailProfileState extends State<DetailProfile> {
                 ],
               ),
             ),
-            Text(
-              widget.profile.name,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              "NIM: ${widget.profile.nim}",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              widget.profile.phone20,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
+            Consumer<ProfileProvider>(
+              builder: (context, provider, child) {
+                final profile = provider.profiles.firstWhere(
+                  (p) => p.id == profileId,
+                );
+                return Column(
+                  children: [
+                    Text(
+                      profile.name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "NIM: ${profile.nim}",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      profile.phone20,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
 
-            SizedBox(height: 8),
+                    SizedBox(height: 8),
+                  ],
+                );
+              },
+            ),
 
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -91,19 +112,18 @@ class _DetailProfileState extends State<DetailProfile> {
                 final Profile? updatedProfile = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditProfile(profile: widget.profile),
+                    builder: (context) => EditProfile(profile: profile),
                   ),
                 );
 
                 if (updatedProfile != null) {
-                  setState(() {
-                    widget.profile.name = updatedProfile.name;
-                    widget.profile.bio = updatedProfile.bio;
-                    widget.profile.phone20 = updatedProfile.phone20;
-                    widget.profile.nim = updatedProfile.nim;
-                  });
-                  Fluttertoast.showToast(msg: "Profile berhasil diperbarui");
-                  Navigator.pop(context, widget.profile); //
+                  final provider = context.read<ProfileProvider>();
+                  final index = provider.profiles.indexWhere(
+                    (p) => p.id == profileId,
+                  );
+                  if (index != -1) {
+                    provider.upadteProfile(index, updatedProfile);
+                  }
                 }
               },
               child: const Text("Edit Profile"),

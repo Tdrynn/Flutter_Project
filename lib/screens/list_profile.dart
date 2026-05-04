@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/profile.dart';
+import 'package:flutter_application_1/provider/profile_provider.dart';
 import 'package:flutter_application_1/screens/detail_profile.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class ListProfile extends StatefulWidget {
   const ListProfile({super.key});
@@ -14,76 +16,80 @@ class _ListProfileState extends State<ListProfile> {
   List<Profile> profiles = [];
 
   void addItem() {
-    setState(() {
-      int lastIndex = profiles.length;
-      profiles.add(
-        Profile(
-          id: lastIndex + 1,
-          nim: "20",
-          name: "Tude",
-          bio: "Flutter Developer",
-          phone20: "081212999803",
-        ),
-      );
-    });
+    final provider = context.read<ProfileProvider>();
+    int lastIndex = profiles.length;
+    final newProfile = Profile(
+      id: lastIndex + 1,
+      nim: "20",
+      name: "Tude",
+      bio: "Flutter Developer",
+      phone20: "081212999803",
+    );
+    provider.addProfile(newProfile);
   }
 
-  void deleteitem(int id) {
-    setState(() {
-      profiles.removeWhere((profile) => profile.id == id);
-    });
+  void deleteItem(int index) {
+    context.read<ProfileProvider>().deleteProfile(index);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('List Profile')),
-      body: ListView.builder(
-        itemCount: profiles.length,
-        itemBuilder: (context, index) {
-          final profile = profiles[index];
+      body: Consumer<ProfileProvider>(
+        builder: (context, profileProvider, child) {
+          final profiles = profileProvider.profiles;
+          return ListView.builder(
+            itemCount: profiles.length,
+            itemBuilder: (context, index) {
+              final profile = profileProvider.profiles[index];
 
-          return Dismissible(
-            key: Key(profile.id.toString()),
-            onDismissed: (direction) {
-              deleteitem(profile.id);
-              Fluttertoast.showToast(msg: "${profile.name} dihapus");
-            },
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://i.pravatar.cc/150?img=10',
+              return Dismissible(
+                key: Key(profile.id.toString()),
+                onDismissed: (direction) {
+                  deleteItem(index);
+                  Fluttertoast.showToast(msg: "${profile.name} dihapus");
+                },
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      'https://i.pravatar.cc/150?img=10',
+                    ),
+                  ),
+                  title: Text(profile.name),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(profile.bio),
+                      SizedBox(height: 4),
+                      Text(
+                        profile.phone20,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      Text(
+                        "NIM: ${profile.nim}",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+
+                  onTap: () async {
+                    final updatedProfile = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailProfile(profileId: profile.id),
+                      ),
+                    );
+
+                    if (updatedProfile != null) {
+                      setState(() {
+                        profiles[index] = updatedProfile;
+                      });
+                    }
+                  },
                 ),
-              ),
-              title: Text(profile.name),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(profile.bio),
-                  SizedBox(height: 4),
-                  Text(profile.phone20, style: TextStyle(color: Colors.grey)),
-                  Text(
-                    "NIM: ${profile.nim}",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-
-              onTap: () async {
-                final updatedProfile = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:(context) => DetailProfile(profile: profile),
-                  ),
-                );
-
-                if (updatedProfile != null) {
-                  setState(() {
-                    profiles[index] = updatedProfile;
-                  });
-                }
-              },
-            ),
+              );
+            },
           );
         },
       ),
@@ -95,8 +101,9 @@ class _ListProfileState extends State<ListProfile> {
           SizedBox(height: 10),
           FloatingActionButton(
             onPressed: () {
-              if (profiles.isNotEmpty) {
-                deleteitem(profiles.last.id);
+              final provider = context.read<ProfileProvider>();
+              if (provider.profiles.isNotEmpty) {
+                deleteItem(provider.profiles.length - 1);
               }
             },
             child: Icon(Icons.remove),
