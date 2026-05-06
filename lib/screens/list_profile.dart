@@ -17,9 +17,8 @@ class _ListProfileState extends State<ListProfile> {
 
   void addItem() {
     final provider = context.read<ProfileProvider>();
-    int lastIndex = profiles.length;
     final newProfile = Profile(
-      id: lastIndex + 1,
+      id: null,
       nim: "20",
       name: "Tude",
       bio: "Flutter Developer",
@@ -29,7 +28,11 @@ class _ListProfileState extends State<ListProfile> {
   }
 
   void deleteItem(int index) {
-    context.read<ProfileProvider>().deleteProfile(index);
+    final provider = context.read<ProfileProvider>();
+    final targetId = provider.profiles[index].id;
+    if (targetId != null) {
+      provider.deleteProfile(targetId);
+    }
   }
 
   @override
@@ -74,18 +77,12 @@ class _ListProfileState extends State<ListProfile> {
                   ),
 
                   onTap: () async {
-                    final updatedProfile = await Navigator.push(
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DetailProfile(profileId: profile.id),
+                        builder: (context) => DetailProfile(profileId: profile.id!),
                       ),
                     );
-
-                    if (updatedProfile != null) {
-                      setState(() {
-                        profiles[index] = updatedProfile;
-                      });
-                    }
                   },
                 ),
               );
@@ -97,9 +94,14 @@ class _ListProfileState extends State<ListProfile> {
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          FloatingActionButton(onPressed: addItem, child: Icon(Icons.add)),
+          FloatingActionButton(
+            heroTag: "fab_add",
+            onPressed: addItem,
+            child: Icon(Icons.add)
+          ),
           SizedBox(height: 10),
           FloatingActionButton(
+            heroTag: "fab_remove",
             onPressed: () {
               final provider = context.read<ProfileProvider>();
               if (provider.profiles.isNotEmpty) {

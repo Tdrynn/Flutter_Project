@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/provider/profile_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter_application_1/models/profile.dart';
 import 'package:flutter_application_1/screens/edit_profile.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +30,7 @@ class DetailProfile extends StatelessWidget {
                 children: [
                   Container(
                     height: 200,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage('assets/images/background1.jpg'),
                         fit: BoxFit.cover,
@@ -43,50 +42,33 @@ class DetailProfile extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 80,
                       backgroundImage: NetworkImage(
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFpilYZY5ru8svJkmZEZBhwtZuGTTNtjmQXw&s',
-                      ),
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFpilYZY5ru8svJkmZEZBhwtZuGTTNtjmQXw&s'),
                     ),
                   ),
                 ],
               ),
             ),
-            Consumer<ProfileProvider>(
-              builder: (context, provider, child) {
-                final profile = provider.profiles.firstWhere(
-                  (p) => p.id == profileId,
-                );
-                return Column(
-                  children: [
-                    Text(
-                      profile.name,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      "NIM: ${profile.nim}",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      profile.phone20,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    SizedBox(height: 8),
-                  ],
-                );
-              },
+            
+            Text(
+              profile.name,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-
+            SizedBox(height: 8),
+            Text(
+              profile.bio,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              profile.phone20,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              profile.nim,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
@@ -109,21 +91,16 @@ class DetailProfile extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
-                final Profile? updatedProfile = await Navigator.push(
+                final updatedProfile = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditProfile(profile: profile),
+                    builder: (context) => EditProfile(id: profileId),
                   ),
                 );
 
                 if (updatedProfile != null) {
-                  final provider = context.read<ProfileProvider>();
-                  final index = provider.profiles.indexWhere(
-                    (p) => p.id == profileId,
-                  );
-                  if (index != -1) {
-                    provider.upadteProfile(index, updatedProfile);
-                  }
+                  provider.updateProfile(profileId, updatedProfile);
+                  Fluttertoast.showToast(msg: 'Profile berhasil diperbarui');
                 }
               },
               child: const Text("Edit Profile"),
